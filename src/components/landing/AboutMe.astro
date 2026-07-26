@@ -2,8 +2,8 @@
     import ImageArt from "./ImageArt.astro";
 ---
 
-<section id="about" class="flex flex-col p-8 w-full max-w-7xl mx-auto h-[calc(100dvh-88px)] max-h-[850px] min-h-[550px]">
-    <div class="flex flex-col w-1/2">
+<section id="about" class="flex flex-col p-8 w-full max-w-7xl mx-auto h-[calc(100dvh-88px)] max-h-[1000px] lg:max-h-[850px] min-h-[550px]">
+    <div class="flex flex-col w-full lg:w-1/2">
         <h2 class="uppercase text-4xl font-serif">Who am I?</h2>
         <p class="mt-4">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vehicula dictum nulla, nec accumsan odio
@@ -16,11 +16,11 @@
             nulla leo, imperdiet eu eleifend at, aliquet eget ligula. Ut gravida dapibus sapien sed facilisis.
         </p>
     </div>
-    <div class="flex flex-row mt-16">
-        <div class="flex flex-1">
+    <div class="flex flex-col lg:flex-row mt-8 lg:mt-16 gap-4 lg:gap-2">
+        <div class="flex flex-1 items-center justify-center lg:justify-start">
             <ImageArt />
         </div>
-        <div class="flex flex-1 pl-8 gap-4">
+        <div class="flex flex-1 lg:pl-8 gap-12 lg:gap-4 justify-center">
             <div class="flex-col">
                 <h4 class="pb-4 font-light text-neutral-900">Education</h4>
                 <div class="flex flex-col gap-2">
