@@ -1,0 +1,23 @@
+---
+    import { Icon } from 'astro-icon/components'
+    import ImageDance from './ImageDance.astro';
+---
+
+<section class="w-full max-w-7xl mx-auto">
+    <div>
+        <div class="flex flex-row">
+            <div class="flex flex-col flex-1 justify-center p-8 my-4">
+                <h1 class="text-5xl">Magdalena Skotnicka</h1>
+                <h3 class="text-lg mt-4">Mixing dance with visual arts</h3>
+            </div>
+            <div class="flex flex-col flex-1 p-8">
+                <ImageDance />
+            </div>
+        </div>
+        <div class="felx flex-row w-fit p-8">
+            <a class="flex flex-nowrap justify-center items-center" href="#">Selected work
+                <Icon class="w-8 h-8" name="arrow-downwoard-light" />
+            </a>
+        </div>
+    </div>
+</section>

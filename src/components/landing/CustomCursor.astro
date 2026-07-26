@@ -1,0 +1,106 @@
+<!-- Custom Cursor Markup -->
+<div 
+  id="cursor-dot" 
+  class="fixed top-0 left-0 w-2.5 h-2.5 bg-[#DEB5ED] rounded-full pointer-events-none z-50 transition-transform duration-100 ease-out"
+></div>
+
+<div 
+  id="cursor-ring" 
+  class="fixed top-0 left-0 w-9 h-9 border border-[#DEB5ED]/70 rounded-full pointer-events-none z-50 flex items-center justify-center transition-all duration-300 ease-out"
+>
+  <!-- Orbiting planet/dot -->
+  <span class="absolute -top-1 w-2 h-2 bg-[#DEB5ED] rounded-full animate-orbit"></span>
+</div>
+
+<style>
+  /* Hide standard cursor everywhere */
+  body, a, button, input, textarea {
+    cursor: none !important;
+  }
+
+  /* Orbit animation pinned relative to the ring's center */
+  @keyframes orbit {
+    0% {
+      transform: rotate(0deg) translateY(0);
+    }
+    100% {
+      transform: rotate(360deg) translateY(0);
+    }
+  }
+
+  .animate-orbit {
+    /* 18px equals half of the 36px (w-9) ring diameter for perfect center origin */
+    transform-origin: 50% 18px;
+    animation: orbit 3s linear infinite;
+  }
+
+  /* Hover state: ring shrinks, snaps to center dot, and morphs */
+  #cursor-ring.is-hovering {
+    width: 1.25rem; /* 20px */
+    height: 1.25rem;
+    border-color: #DEB5ED;
+    background-color: rgba(245, 230, 250, 0.25);
+  }
+
+  /* Hide ring's orbit dot when hovering */
+  #cursor-ring.is-hovering span {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+</style>
+
+<script>
+  function initCustomCursor() {
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+
+    if (!dot || !ring) return;
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let ringX = -100;
+    let ringY = -100;
+
+    // Track mouse coordinates
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      // Position inner dot exactly centered on mouse X/Y
+      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+    });
+
+    // Smooth LERP loop for outer ring
+    function render() {
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+
+      // Apply single combined transform string to ensure exact center-alignment
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+
+      requestAnimationFrame(render);
+    }
+    render();
+
+    // Attach event listeners to interactive elements
+    const interactiveSelectors = 'a, button, input, textarea, [data-cursor="pointer"]';
+
+    document.querySelectorAll(interactiveSelectors).forEach((el) => {
+      el.addEventListener('mouseenter', () => {
+        ring.classList.add('is-hovering');
+        dot.classList.add('is-hovering');
+      });
+
+      el.addEventListener('mouseleave', () => {
+        ring.classList.remove('is-hovering');
+        dot.classList.remove('is-hovering');
+      });
+    });
+  }
+
+  // Run on initial load
+  initCustomCursor();
+
+  // Support Astro View Transitions / Page Swaps
+  document.addEventListener('astro:after-swap', initCustomCursor);
+</script>

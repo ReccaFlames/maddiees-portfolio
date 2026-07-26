@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@theme {
+  --font-sans: "Instrument Sans", sans-serif;
+}
+
+:root {
+    --background: F1EEE8;
+    --surface: #ffffff;
+}
+
+.instrument-sans {
+  font-family: "Instrument Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+* {
+  font-variant-numeric: tabular-nums;
+}
