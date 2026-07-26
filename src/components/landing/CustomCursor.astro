@@ -4,12 +4,19 @@
   class="fixed top-0 left-0 w-2.5 h-2.5 bg-[#DEB5ED] rounded-full pointer-events-none z-50 transition-transform duration-100 ease-out"
 ></div>
 
+<!-- Outer container (JS tracking) -->
 <div 
   id="cursor-ring" 
-  class="fixed top-0 left-0 w-9 h-9 border border-[#DEB5ED]/70 rounded-full pointer-events-none z-50 flex items-center justify-center transition-all duration-300 ease-out"
+  class="fixed top-0 left-0 pointer-events-none z-50 flex items-center justify-center w-9 h-9"
 >
-  <!-- Orbiting planet/dot -->
-  <span class="absolute -top-1 w-2 h-2 bg-[#DEB5ED] rounded-full animate-orbit"></span>
+  <!-- Inner ring (CSS Morph/Wobble/Scale) -->
+  <div 
+    id="cursor-orbit-path" 
+    class="w-full h-full border border-[#DEB5ED]/70 rounded-full transition-colors duration-300 ease-out flex items-center justify-center relative origin-center"
+  >
+    <!-- Orbiting planet/dot -->
+    <span class="orbit-planet absolute w-2 h-2 bg-[#DEB5ED] rounded-full"></span>
+  </div>
 </div>
 
 <style>
@@ -18,34 +25,61 @@
     cursor: none !important;
   }
 
-  /* Orbit animation pinned relative to the ring's center */
-  @keyframes orbit {
-    0% {
-      transform: rotate(0deg) translateY(0);
-    }
-    100% {
-      transform: rotate(360deg) translateY(0);
-    }
-  }
-
-  .animate-orbit {
-    /* 18px equals half of the 36px (w-9) ring diameter for perfect center origin */
-    transform-origin: 50% 18px;
+  /* Planet positioned dead-center, rotated from (0,0) center point */
+  .orbit-planet {
+    top: 50%;
+    left: 50%;
     animation: orbit 3s linear infinite;
   }
 
-  /* Hover state: ring shrinks, snaps to center dot, and morphs */
-  #cursor-ring.is-hovering {
-    width: 1.25rem; /* 20px */
-    height: 1.25rem;
-    border-color: #DEB5ED;
-    background-color: rgba(245, 230, 250, 0.25);
+  /* Pure CSS transform combining centering offset + 18px orbital radius */
+  @keyframes orbit {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg) translateY(-18px);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg) translateY(-18px);
+    }
   }
 
-  /* Hide ring's orbit dot when hovering */
-  #cursor-ring.is-hovering span {
+  /* Irregular 100% closed loop morphing animation */
+  @keyframes irregular-wobble {
+    0% {
+      border-radius: 42% 58% 70% 30% / 60% 32% 68% 40%;
+      transform: scale(1.2) rotate(0deg);
+    }
+    33% {
+      border-radius: 68% 32% 45% 55% / 35% 65% 35% 65%;
+      transform: scale(1.22) rotate(120deg);
+    }
+    66% {
+      border-radius: 35% 65% 60% 40% / 55% 40% 60% 45%;
+      transform: scale(1.18) rotate(240deg);
+    }
+    100% {
+      border-radius: 42% 58% 70% 30% / 60% 32% 68% 40%;
+      transform: scale(1.2) rotate(360deg);
+    }
+  }
+
+  /* Hover State applied to the inner path element */
+  #cursor-orbit-path.is-hovering {
+    border-color: #DEB5ED;
+    background-color: rgba(245, 230, 250, 0.15);
+    
+    /* Wobble & expand 20% around exact geometric center */
+    animation: irregular-wobble 3s linear infinite;
+  }
+
+  /* Hide the small orbiting dot on hover */
+  #cursor-orbit-path.is-hovering span {
     opacity: 0;
     transition: opacity 0.2s ease;
+  }
+
+  /* Center dot scales down slightly on hover */
+  #cursor-dot.is-hovering {
+    transform: translate(-50%, -50%) scale(0.5) !important;
   }
 </style>
 
@@ -53,8 +87,9 @@
   function initCustomCursor() {
     const dot = document.getElementById('cursor-dot');
     const ring = document.getElementById('cursor-ring');
+    const path = document.getElementById('cursor-orbit-path');
 
-    if (!dot || !ring) return;
+    if (!dot || !ring || !path) return;
 
     let mouseX = -100;
     let mouseY = -100;
@@ -66,16 +101,16 @@
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      // Position inner dot exactly centered on mouse X/Y
+      // Position inner dot centered on mouse coordinate
       dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
     });
 
-    // Smooth LERP loop for outer ring
+    // Smooth LERP loop for position tracking
     function render() {
       ringX += (mouseX - ringX) * 0.15;
       ringY += (mouseY - ringY) * 0.15;
 
-      // Apply single combined transform string to ensure exact center-alignment
+      // Position outer ring container centered on LERP coordinate
       ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
 
       requestAnimationFrame(render);
@@ -87,12 +122,12 @@
 
     document.querySelectorAll(interactiveSelectors).forEach((el) => {
       el.addEventListener('mouseenter', () => {
-        ring.classList.add('is-hovering');
+        path.classList.add('is-hovering');
         dot.classList.add('is-hovering');
       });
 
       el.addEventListener('mouseleave', () => {
-        ring.classList.remove('is-hovering');
+        path.classList.remove('is-hovering');
         dot.classList.remove('is-hovering');
       });
     });
@@ -101,6 +136,6 @@
   // Run on initial load
   initCustomCursor();
 
-  // Support Astro View Transitions / Page Swaps
+  // Support Astro View Transitions
   document.addEventListener('astro:after-swap', initCustomCursor);
 </script>
