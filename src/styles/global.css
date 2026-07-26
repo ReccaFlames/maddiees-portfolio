@@ -18,4 +18,5 @@
 
 * {
   font-variant-numeric: tabular-nums;
+  scroll-behavior: smooth;
 }
