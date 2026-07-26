@@ -10,11 +10,10 @@
     <div id="carouselTrack" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-2">
         {
         events.map((entry) => (
-        <article
-            class="flex-none w-full snap-center flex flex-col md:flex-row overflow-hidden transition-shadow">
-            
+        <article class="flex-none w-full snap-center flex flex-col md:flex-row overflow-hidden transition-shadow">
+
             <!-- Content Section -->
-            <div class="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between">
+            <div class="w-full md:w-1/2 py-6 sm:py-8 flex flex-col justify-between">
                 <div>
                     <h3 class="text-xl sm:text-2xl font-medium text-neutral-900 leading-snug mb-6">
                         {entry.data.title}
@@ -43,14 +42,14 @@
         <!-- Controls -->
         <div class="flex items-center gap-2">
             <button id="prevBtn" aria-label="Previous event"
-                class="p-3 border border-neutral-300 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors disabled:opacity-30 disabled:pointer-events-none">
+                class="p-3 border border-neutral-300 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors disabled:opacity-30 disabled:pointer-events-none cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
             </button>
             <button id="nextBtn" aria-label="Next event"
-                class="p-3 border border-neutral-300 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors disabled:opacity-30 disabled:pointer-events-none">
+                class="p-3 border border-neutral-300 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors disabled:opacity-30 disabled:pointer-events-none cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -58,9 +57,12 @@
             </button>
         </div>
         <div class="flex justify-center w-full">
-            <div class="w-fit px-4 py-2 border border-neutral-300 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors disabled:opacity-30 disabled:pointer-events-none">
-                <a class="cursor-auto">Explore more</a>
+            <a href="#" class="cursor-pointer">
+            <div
+                class="w-fit px-4 py-2 border border-neutral-300 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors disabled:opacity-30 disabled:pointer-events-none">
+                Explore more
             </div>
+            </a>
         </div>
     </div>
 </section>
